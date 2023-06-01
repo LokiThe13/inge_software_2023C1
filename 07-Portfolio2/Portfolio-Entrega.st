@@ -812,6 +812,28 @@ addedTo: aPortfolio
 
 	self subclassResponsibility ! !
 
+
+!Account methodsFor: 'initialization' stamp: 'TK 6/1/2023 14:45:09'!
+initializeWithName: aName
+
+	self subclassResponsibility.! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'Account class' category: 'Portfolio-Solucion'!
+Account class
+	instanceVariableNames: ''!
+
+!Account class methodsFor: 'instance creation' stamp: 'TK 6/1/2023 14:52:18'!
+named: aName
+
+	^ self basicNew initializeWithName: aName! !
+
+!Account class methodsFor: 'instance creation' stamp: 'TK 6/1/2023 14:48:10'!
+new
+
+	^ self basicNew initializeWithName: 'unnamed'.! !
+
 
 !classDefinition: #Portfolio category: 'Portfolio-Solucion'!
 Account subclass: #Portfolio
@@ -942,51 +964,40 @@ signalCanNotAddAccount
 Portfolio class
 	instanceVariableNames: ''!
 
-!Portfolio class methodsFor: 'as yet unclassified' stamp: 'HAW 5/25/2019 11:48:55'!
+!Portfolio class methodsFor: 'instance creation' stamp: 'HAW 5/25/2019 11:48:55'!
 canNotAddAccountErrorMessage
 	
 	^'Can not add repeated account to a portfolio'! !
 
-!Portfolio class methodsFor: 'as yet unclassified' stamp: 'TK 5/31/2023 05:37:14'!
-named: aName
-
-	^self basicNew initializeWithName: aName; yourself.! !
-
-!Portfolio class methodsFor: 'as yet unclassified' stamp: 'TK 5/31/2023 05:37:20'!
+!Portfolio class methodsFor: 'instance creation' stamp: 'TK 6/1/2023 14:52:38'!
 named: aName with: anAccount
 
-	^self basicNew initializeWithName: aName;
+	^ (self named: aName)
 		add: anAccount;
-		yourself! !
+		yourself.! !
 
-!Portfolio class methodsFor: 'as yet unclassified' stamp: 'TK 5/31/2023 05:25:57'!
+!Portfolio class methodsFor: 'instance creation' stamp: 'TK 6/1/2023 14:52:53'!
 named: aName with: anAccount with: anotherAccount
 
-	^self basicNew initializeWithName: aName;
+	^ (self named: aName)
 		add: anAccount;
 		add: anotherAccount;
-		yourself! !
+		yourself.! !
 
-!Portfolio class methodsFor: 'as yet unclassified' stamp: 'TK 5/31/2023 05:24:05'!
-new
-
-	^self basicNew initializeWithName: 'unnamed';
-		yourself! !
-
-!Portfolio class methodsFor: 'as yet unclassified' stamp: 'TK 5/31/2023 05:25:37'!
+!Portfolio class methodsFor: 'instance creation' stamp: 'TK 6/1/2023 14:42:01'!
 with: anAccount
 
 	^self new
 		add: anAccount;
-		yourself! !
+		yourself.! !
 
-!Portfolio class methodsFor: 'as yet unclassified' stamp: 'TK 5/31/2023 05:25:20'!
+!Portfolio class methodsFor: 'instance creation' stamp: 'TK 6/1/2023 14:42:03'!
 with: anAccount with: anotherAccount
 
 	^self new
 		add: anAccount;
 		add: anotherAccount;
-		yourself! !
+		yourself.! !
 
 
 !classDefinition: #ReceptiveAccount category: 'Portfolio-Solucion'!
@@ -1056,24 +1067,6 @@ recordInto: aReport
 recordTransactionsInto: aReport
 
 	transactions do: [ :aTransaction | aTransaction recordInto: aReport. ].! !
-
-"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
-
-!classDefinition: 'ReceptiveAccount class' category: 'Portfolio-Solucion'!
-ReceptiveAccount class
-	instanceVariableNames: ''!
-
-!ReceptiveAccount class methodsFor: 'instance creation' stamp: 'TK 5/31/2023 05:36:38'!
-named: aName
-
-	^self basicNew initializeWithName: aName;
-		yourself! !
-
-!ReceptiveAccount class methodsFor: 'instance creation' stamp: 'TK 5/31/2023 05:36:18'!
-new
-
-	^self basicNew initializeWithName: 'unnamed';
-		yourself! !
 
 
 !classDefinition: #AccountReport category: 'Portfolio-Solucion'!
@@ -1204,43 +1197,43 @@ for: aPortfolio
 
 !classDefinition: #AccountTree category: 'Portfolio-Solucion'!
 PortfolioReport subclass: #AccountTree
-	instanceVariableNames: 'tree tabSpaces indentation'
+	instanceVariableNames: 'tree tabSpaces level'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Portfolio-Solucion'!
 
-!AccountTree methodsFor: 'report' stamp: 'TK 6/1/2023 14:17:01'!
+!AccountTree methodsFor: 'report' stamp: 'TK 6/1/2023 15:10:19'!
 report
 
 	tree := OrderedCollection new.
-	indentation := 0.
+	level := 0.
 	
 	account recordInto: self.
 	
 	^ tree.! !
 
 
-!AccountTree methodsFor: 'indent' stamp: 'TK 5/31/2023 06:29:41'!
+!AccountTree methodsFor: 'indent' stamp: 'TK 6/1/2023 15:10:04'!
 indent: aString
 
-	^ aString padded: #left to: indentation * tabSpaces + aString size with: $ .! !
+	^ aString padded: #left to: level * tabSpaces + aString size with: $ .! !
 
-!AccountTree methodsFor: 'indent' stamp: 'TK 6/1/2023 14:13:18'!
+!AccountTree methodsFor: 'indent' stamp: 'TK 6/1/2023 15:10:00'!
 indented: aBlock
 	
-	indentation  := indentation + 1.
+	level := level + 1.
 	aBlock value.
-	indentation  := indentation - 1.! !
+	level := level - 1.! !
 
 
 !AccountTree methodsFor: 'record' stamp: 'TK 5/31/2023 06:22:30'!
 recordDeposit: aDeposit! !
 
-!AccountTree methodsFor: 'record' stamp: 'TK 6/1/2023 14:14:35'!
+!AccountTree methodsFor: 'record' stamp: 'TK 6/1/2023 15:13:03'!
 recordPortfolio: aPortfolio
 
 	tree add: (self indent: aPortfolio name).
-	self indented: [ 	aPortfolio recordAccountsInto: self. ].
+	self indented: [ 	super recordPortfolio: aPortfolio. ].
 	! !
 
 !AccountTree methodsFor: 'record' stamp: 'TK 5/31/2023 22:42:24'!
