@@ -1216,7 +1216,7 @@ PortfolioReport subclass: #AccountTree
 	poolDictionaries: ''
 	category: 'Portfolio-Solucion'!
 
-!AccountTree methodsFor: 'report' stamp: 'TK 5/31/2023 22:46:20'!
+!AccountTree methodsFor: 'report' stamp: 'TK 6/1/2023 14:17:01'!
 report
 
 	tree := OrderedCollection new.
@@ -1232,17 +1232,22 @@ indent: aString
 
 	^ aString padded: #left to: indentation * tabSpaces + aString size with: $ .! !
 
+!AccountTree methodsFor: 'indent' stamp: 'TK 6/1/2023 14:13:18'!
+indented: aBlock
+	
+	indentation  := indentation + 1.
+	aBlock value.
+	indentation  := indentation - 1.! !
+
 
 !AccountTree methodsFor: 'record' stamp: 'TK 5/31/2023 06:22:30'!
 recordDeposit: aDeposit! !
 
-!AccountTree methodsFor: 'record' stamp: 'TK 5/31/2023 22:48:39'!
+!AccountTree methodsFor: 'record' stamp: 'TK 6/1/2023 14:14:35'!
 recordPortfolio: aPortfolio
 
 	tree add: (self indent: aPortfolio name).
-	indentation := indentation + 1.
-	aPortfolio recordAccountsInto: self.
-	indentation := indentation - 1.
+	self indented: [ 	aPortfolio recordAccountsInto: self. ].
 	! !
 
 !AccountTree methodsFor: 'record' stamp: 'TK 5/31/2023 22:42:24'!
@@ -1275,14 +1280,13 @@ AccountTree subclass: #TransactionTree
 	poolDictionaries: ''
 	category: 'Portfolio-Solucion'!
 
-!TransactionTree methodsFor: 'record' stamp: 'TK 5/31/2023 22:49:41'!
+!TransactionTree methodsFor: 'record' stamp: 'TK 6/1/2023 14:17:48'!
 recordReceptiveAccount: aReceptiveAccount
 
 	super recordReceptiveAccount: aReceptiveAccount.
-	indentation := indentation + 1.
-	(AccountSummary for: aReceptiveAccount) report do:
+	self indented: [ (AccountSummary for: aReceptiveAccount) report do:
 		[ :aSummarizedTransaction | tree add: (self indent: aSummarizedTransaction) ].
-	indentation := indentation - 1.! !
+	].! !
 
 
 !classDefinition: #TransferNet category: 'Portfolio-Solucion'!
