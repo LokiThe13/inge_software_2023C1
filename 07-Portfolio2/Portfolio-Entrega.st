@@ -197,7 +197,7 @@ AccountReportTest subclass: #TransactionTreeTest
 	poolDictionaries: ''
 	category: 'Portfolio-Solucion'!
 
-!TransactionTreeTest methodsFor: 'tests' stamp: 'TK 5/31/2023 08:05:21'!
+!TransactionTreeTest methodsFor: 'tests' stamp: 'TK 6/1/2023 14:32:56'!
 test01SiblingAccountsProducesComplexTree
 
 	| A B C D E F G H P Q R S T U V tree result |
@@ -234,8 +234,7 @@ test01SiblingAccountsProducesComplexTree
 	S := Portfolio named: 'Companies Portfolio' with: E with: F.
 	R := Portfolio named: 'NGO Portfolio' with: G with: H.
 	Q := Portfolio named: 'USA Portfolio' with: S with: T.
-	P := Portfolio named: 'Global Portfolio'.
-	P add: Q; add: R.
+	P := Portfolio named: 'Global Portfolio' with: Q with: R.
 	tree := TransactionTree for: P.
 	
 	result := OrderedCollection new.
@@ -997,12 +996,6 @@ Account subclass: #ReceptiveAccount
 	poolDictionaries: ''
 	category: 'Portfolio-Solucion'!
 
-!ReceptiveAccount methodsFor: 'initialization' stamp: 'HernanWilkinson 7/13/2011 18:35'!
-initialize
-
-	super initialize.
-	transactions := OrderedCollection new.! !
-
 !ReceptiveAccount methodsFor: 'initialization' stamp: 'TK 5/31/2023 05:38:05'!
 initializeWithName: aName
 
@@ -1280,12 +1273,15 @@ AccountTree subclass: #TransactionTree
 	poolDictionaries: ''
 	category: 'Portfolio-Solucion'!
 
-!TransactionTree methodsFor: 'record' stamp: 'TK 6/1/2023 14:17:48'!
+!TransactionTree methodsFor: 'record' stamp: 'TK 6/1/2023 14:37:32'!
 recordReceptiveAccount: aReceptiveAccount
 
+	| accountSummary |
+
 	super recordReceptiveAccount: aReceptiveAccount.
-	self indented: [ (AccountSummary for: aReceptiveAccount) report do:
-		[ :aSummarizedTransaction | tree add: (self indent: aSummarizedTransaction) ].
+	self indented: [ 
+		accountSummary := (AccountSummary for: aReceptiveAccount) report.
+		accountSummary do: [ :aSummarizedTransaction | tree add: (self indent: aSummarizedTransaction) ].
 	].! !
 
 
